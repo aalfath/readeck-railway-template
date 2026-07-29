@@ -4,7 +4,7 @@ Readeck is an open-source read-later and bookmark manager that saves readable co
 
 ## About Hosting Readeck
 
-Hosting Readeck requires one public container and one persistent volume. This package pins the Umbrel-tested Readeck 0.22.3 image, exposes its documented port `8000` through Railway HTTPS, and mounts `/readeck`, which contains `config.toml`, the SQLite database, custom content scripts, and archived bookmark files. Railway supplies the canonical public URL and checks the unauthenticated `/login` page for readiness. A generated application secret protects sessions, while a generated password creates the initial `admin` account before the server first becomes public. SQLite is suitable for a single Readeck instance; do not add replicas that share this volume.
+Hosting Readeck requires one public container and one persistent volume. This package builds a minimal wrapper from the digest-pinned, Umbrel-tested Readeck 0.22.3 image, exposes its documented port `8000` through Railway HTTPS, and mounts `/readeck`, which contains `config.toml`, the SQLite database, custom content scripts, and archived bookmark files. Railway supplies the canonical public URL and checks the unauthenticated `/login` page for readiness. A generated application secret protects sessions, while a generated password creates the initial `admin` account before the server first becomes public. SQLite is suitable for a single Readeck instance; do not add replicas that share this volume.
 
 > **Lawful personal archiving notice:** Save only pages you are authorized to access and preserve. Follow each site's terms and applicable copyright law; do not circumvent access controls or paywalls, and do not redistribute archived content without permission.
 
@@ -17,6 +17,7 @@ Hosting Readeck requires one public container and one persistent volume. This pa
 ## Dependencies for Readeck Hosting
 
 - `codeberg.org/readeck/readeck:0.22.3`
+- This repository's minimal Dockerfile wrapper, built by Railway from GitHub
 - One Railway persistent volume mounted at `/readeck`
 - One Railway-generated HTTPS service domain targeting port `8000`
 
@@ -33,7 +34,9 @@ Hosting Readeck requires one public container and one persistent volume. This pa
 
 | Service | Image | Networking and health | Persistent storage |
 | --- | --- | --- | --- |
-| `Readeck` | `codeberg.org/readeck/readeck:0.22.3` | Public port `8000`; canonical Railway HTTPS URL; readiness path `/login` | `/readeck` for configuration, SQLite, archived pages, images, and content scripts |
+| `Readeck` | GitHub Dockerfile wrapper based on `codeberg.org/readeck/readeck:0.22.3` at its verified digest | Public port `8000`; canonical Railway HTTPS URL; readiness path `/login` | `/readeck` for configuration, SQLite, archived pages, images, and content scripts |
+
+The Dockerfile changes no Readeck binary, command, environment, or feature. Its `FROM` is pinned to the verified upstream digest, and its only additional instruction materializes the inherited `/readeck` working directory required by Railway before a volume is mounted.
 
 The startup command uses Readeck's documented `user` command to create an administrator only when that username does not already exist. Retrieve `READECK_ADMIN_PASSWORD` from Railway service variables, sign in as `admin`, then change the password in Readeck; subsequent restarts do not overwrite it. Keep Railway variable access restricted and enable TOTP in the account security settings. Railway volumes preserve state across deployments but are not independent backups, so use Readeck's documented export and backup procedures.
 

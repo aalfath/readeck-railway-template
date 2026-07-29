@@ -1,13 +1,14 @@
 # Readeck Railway Template — Source Record and Manual Publication Package
 
-**Status: DRAFT CREATION FAILED — SAFE GATE STOPPED AUTOMATED PUBLICATION.** The verified source service deploys the exact requested Codeberg image, but `railway templates create` rejected that source with `Invalid Docker image for Readeck`. No draft identity was returned, no serialized template exists to reconcile, and no publication command was run. Publication will be performed manually.
+**Status: UNPUBLISHED — SAFE GATE STOPPED AUTOMATED PUBLICATION.** The minimal GitHub-source recovery removed Railway's `Invalid Docker image` blocker and produced a project-derived draft. The draft preserved the verified service graph and canonical URL reference, but stripped eight required defaults and omitted the 300-second health timeout. Publishing it now would produce a broken and unprotected deployment, so no publication command was run. Publication will be performed manually.
 
 ## Approved Identity and Marketplace Metadata
 
 | Item | Value |
 | --- | --- |
 | Exact project and template title | `Readeck` |
-| Draft template ID / code | Not created; Railway rejected the Codeberg image during draft generation |
+| Draft template ID / code | `0ef8d34f-b56a-4031-80d0-91a86c55a2cb` / `LJorwr` |
+| Editor URL | https://railway.com/workspace/templates/0ef8d34f-b56a-4031-80d0-91a86c55a2cb |
 | Status | `UNPUBLISHED`; safe gate blocked |
 | Category | `Other` |
 | Description | `Save, organize, and preserve web articles for focused reading.` |
@@ -16,16 +17,16 @@
 | Workspace | Agastya Fauzan Alfath's Projects (`017da116-eee8-4131-a3a0-2f2d3de455f5`) |
 | Source project | `Readeck` (`938d1012-731c-42d8-ad28-755b690ad063`) |
 | Source environment | `production` (`c85c83cc-e082-4c30-b93a-68e35433017b`) |
-| Source service | `Readeck` (`5e2601cb-ef75-408d-94c4-e734d64998f7`) |
-| Verified source URL | https://readeck-production-5d4e.up.railway.app |
+| Source service | `Readeck` (`e26ca3f3-6ac3-4c42-ac91-38d8d53b63a7`) |
+| Verified source URL | https://readeck-production-96e3.up.railway.app |
 
 The icon is Readeck's official versioned `logo-square.svg`: HTTP `200`, SVG, `240 × 240`, square view box, with transparent rounded corners suitable for both the template and service. Readeck remains the upstream software author. This is a community-maintained template and does not imply affiliation with or endorsement by Readeck.
 
 ## Verified Source Service Graph
 
-| Service | Image | Networking and health | Persistent volume | Verified deployment |
+| Service | Source and immutable base | Networking and health | Persistent volume | Verified deployment |
 | --- | --- | --- | --- | --- |
-| `Readeck` | `codeberg.org/readeck/readeck:0.22.3` (resolved digest `sha256:ed1c513f8e1d59b1d38fda324ac279eeb65afd0327907e498061ec9fd2f31c15`) | Public target port `8000`; canonical Railway HTTPS URL; `/login`; 300-second timeout; `ON_FAILURE`, 10 retries | `readeck-volume` (`21ef316f-3624-412d-98c3-21f3000b3055`) at `/readeck` | `30d64fd6-e453-441f-bd99-d3d68cb5b211` — `SUCCESS` |
+| `Readeck` | `aalfath/readeck-railway-template` at commit `514079f`; Dockerfile `FROM codeberg.org/readeck/readeck:0.22.3@sha256:ed1c513f8e1d59b1d38fda324ac279eeb65afd0327907e498061ec9fd2f31c15` | Public target port `8000`; canonical Railway HTTPS URL; `/login`; 300-second timeout; `ON_FAILURE`, 10 retries | `readeck-volume` (`21ef316f-3624-412d-98c3-21f3000b3055`) at `/readeck` | `915fadff-4768-42e1-83df-58512213cb49` — `SUCCESS` |
 
 The final source startup command is:
 
@@ -34,6 +35,8 @@ The final source startup command is:
 ```
 
 Readeck 0.22.3's documented `user` command reads the password from the named environment variable. The dry run prevents startup from resetting a password changed in the UI, while a fresh volume receives an administrator before the public server starts. `READECK_SECRET_KEY` and `READECK_ADMIN_PASSWORD` were rotated after smoke testing; neither active source value appears in this repository.
+
+The recovery Dockerfile is intentionally limited to the exact digest-pinned `FROM` plus `RUN mkdir -p /readeck`. The second instruction only materializes the inherited working directory because Railway validates it before mounting a volume. Local and Railway builds confirmed that the wrapper inherits Readeck's binary and default command unchanged. Railway built commit `514079f` with the Dockerfile builder and produced wrapper digest `sha256:ef2fb5ebbd496355c8d8fc1c878f50d4c10293b810569e63e29e965bfe9c73b6`.
 
 ## Upstream and Umbrel Contract Evidence
 
@@ -46,9 +49,10 @@ Readeck 0.22.3's documented `user` command reads the password from the named env
 
 ## Source Verification and Cleanup Evidence
 
-- Final deployment `30d64fd6-e453-441f-bd99-d3d68cb5b211` reached `SUCCESS` with the requested image, canonical URL reference, startup command, `/login` health path, restart policy, public domain, and `/readeck` volume.
+- Replacement deployment `915fadff-4768-42e1-83df-58512213cb49` reached `SUCCESS` from GitHub commit `514079f` with the exact digest-pinned base image, canonical URL reference, startup command, `/login` health path, 300-second timeout, restart policy, public domain, and existing `/readeck` volume.
+- The original image-source service was first renamed and stopped. The existing volume was detached only after the replacement wrapper built and served HTTP successfully, then attached to the replacement at the same `/readeck` mount. The superseded service was deleted only after the complete replacement verification passed; the project now contains one service named exactly `Readeck`.
 - The public `/login` UI returned HTTP `200`; administrator authentication reached the protected profile and bookmark interface.
-- The smoke test supplied its own short HTML document for the reserved `https://example.com/railway-readeck-smoke-test` URL. It did not scrape a third-party publication or bypass access controls.
+- The replacement authenticated with the administrator stored on the migrated volume, proving the prior account and database survived the service swap. Its smoke test supplied its own short HTML document for the reserved `https://example.com/railway-readeck-replacement-smoke-test` URL; it did not scrape a third-party publication or bypass access controls.
 - Readeck accepted the page, completed extraction with state `0`, and returned the supplied title. The same bookmark remained readable after a Railway service restart, proving SQLite and archived content persisted on `/readeck`.
 - The smoke bookmark was deleted and a follow-up request returned HTTP `404`.
 - The temporary verification password is no longer active. Both source secrets were rotated without printing them, the protected account was updated, the final conditional bootstrap was restored, and authentication with the rotated Railway variable succeeded.
@@ -56,14 +60,18 @@ Readeck 0.22.3's documented `user` command reads the password from the named env
 
 ## Draft Attempt, Audit Result, and Safe Gate
 
-The exact command `railway templates create --project 938d1012-731c-42d8-ad28-755b690ad063 --environment c85c83cc-e082-4c30-b93a-68e35433017b --json` reached Railway's project and environment selection, then returned `Invalid Docker image for Readeck`.
+The exact command `railway templates create --project 938d1012-731c-42d8-ad28-755b690ad063 --environment c85c83cc-e082-4c30-b93a-68e35433017b --json` created draft `0ef8d34f-b56a-4031-80d0-91a86c55a2cb`, code `LJorwr`, title `Readeck`, status `UNPUBLISHED`, in the approved workspace.
 
-Because Railway returned no draft:
+The audited `serializedConfig` contains:
 
-- there is no template ID, code, editor URL, or `serializedConfig` to audit;
-- the source project's live secret values cannot be safely replaced with template functions in an editor;
-- the Codeberg image must not be silently replaced by a mirror or wrapper image, because the approved scope requires the exact upstream image;
-- `railway templates publish` was not attempted, because no reconciled draft passed the variable and source-secret gate.
+- one service named exactly `Readeck`, sourced from `https://github.com/aalfath/readeck-railway-template`;
+- the complete conditional bootstrap, `/login` health path, `ON_FAILURE` policy with 10 retries, one public service-domain marker, and one `/readeck` volume;
+- all nine expected variable keys, all required (`isOptional: false`);
+- the exact canonical URL default `https://${{Readeck.RAILWAY_PUBLIC_DOMAIN}}`;
+- **no default value for the other eight required variables**, including both credentials and all safe port, host, log, and administrator literals;
+- no 300-second health timeout in the serialized deployment settings.
+
+The gate therefore failed. No active source credential appears in the draft, but both generated template functions and six required safe literals are absent. `railway templates publish` was not run.
 
 Publication will be performed manually.
 
@@ -111,9 +119,9 @@ No deployer input is required. Railway can generate both secrets, the canonical 
 
 ## Remaining Manual Publication Actions
 
-1. Ask Railway support or use the template composer to create an unpublished draft that accepts exact image `codeberg.org/readeck/readeck:0.22.3`; do not substitute another registry or image.
-2. Preserve exact service namespace `Readeck`, public port `8000`, `/login` health path with 300-second timeout, `/readeck` volume, startup command, and `ON_FAILURE` policy with 10 retries.
-3. Paste the complete raw block, keep all nine variables required, and enter every inventory description. Confirm only the two secret variables use generators and that the canonical URL remains a Railway reference.
+1. Open https://railway.com/workspace/templates/0ef8d34f-b56a-4031-80d0-91a86c55a2cb and preserve exact service namespace `Readeck` and the GitHub Dockerfile source.
+2. Preserve public port `8000`, restore the `/login` health path's 300-second timeout, retain the `/readeck` volume, startup command, and `ON_FAILURE` policy with 10 retries.
+3. Paste the complete raw block, keep all nine variables required, and enter every inventory description. Confirm only the two secret variables use generators, the canonical URL remains the existing Railway reference, and no source credential is entered.
 4. Set the exact title, category, description, official icon, service description, and [README.md](./README.md) overview.
 5. Reconcile the complete serialized graph key-for-key and prove that no active source password or secret key appears.
 6. Deploy the draft into a disposable project. Verify generated secrets, no avoidable prompts, successful health and UI, protected first login, supplied-HTML bookmark creation, persistence across restart, test-content deletion, and secret rotation.
@@ -122,7 +130,8 @@ No deployer input is required. Railway can generate both secrets, the canonical 
 
 ## Residual Risks
 
-- Railway currently rejects the exact Codeberg image during draft generation even though the source runtime deploys it successfully. Registry acceptance is the publication blocker.
+- The image-registry blocker is resolved by the minimal GitHub Dockerfile wrapper, but the generated draft strips eight required defaults and one health timeout; manual editor reconciliation is the current publication blocker.
+- The template source follows this repository's GitHub branch. Future repository changes can alter consumer builds even though the upstream Readeck base is digest-pinned; review and verify every wrapper commit before publishing or updating the template.
 - Readeck uses SQLite on the mounted volume. Keep one replica, avoid network filesystems, and maintain independent exports or backups.
 - Railway `/login` readiness confirms the HTTP application is serving but is less comprehensive than Readeck's container CLI health check.
 - The initial password remains readable to people with Railway variable access. Change it after first login, restrict project membership, and enable TOTP.
