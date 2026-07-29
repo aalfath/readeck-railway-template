@@ -1,1 +1,3 @@
 FROM codeberg.org/readeck/readeck:0.22.3@sha256:ed1c513f8e1d59b1d38fda324ac279eeb65afd0327907e498061ec9fd2f31c15
+
+RUN mkdir -p /readeck
