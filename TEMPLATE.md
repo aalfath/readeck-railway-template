@@ -1,15 +1,17 @@
-# Readeck Railway Template — Source Record and Manual Publication Package
+# Readeck Railway Template — Published Record
 
-**Status: UNPUBLISHED — SAFE GATE STOPPED AUTOMATED PUBLICATION.** The minimal GitHub-source recovery removed Railway's `Invalid Docker image` blocker and produced a project-derived draft. The draft preserved the verified service graph and canonical URL reference, but stripped eight required defaults and omitted the 300-second health timeout. Publishing it now would produce a broken and unprotected deployment, so no publication command was run. Publication will be performed manually.
+**Status: PUBLISHED.** After user reconciliation, all nine exact defaults, required states, template functions, and deployment settings passed the pre-publication and post-publication serialized-config audits. The user attested that all nine inventory descriptions were entered in the editor. Every default is a safe literal, Railway reference, or template function, and no active source credential appears in the published template.
 
 ## Approved Identity and Marketplace Metadata
 
 | Item | Value |
 | --- | --- |
 | Exact project and template title | `Readeck` |
-| Draft template ID / code | `0ef8d34f-b56a-4031-80d0-91a86c55a2cb` / `LJorwr` |
+| Template ID | `0ef8d34f-b56a-4031-80d0-91a86c55a2cb` |
+| Template code | `readeck-1` (draft code: `LJorwr`) |
+| Deploy URL | https://railway.com/deploy/readeck-1 |
 | Editor URL | https://railway.com/workspace/templates/0ef8d34f-b56a-4031-80d0-91a86c55a2cb |
-| Status | `UNPUBLISHED`; safe gate blocked |
+| Status | `PUBLISHED` |
 | Category | `Other` |
 | Description | `Save, organize, and preserve web articles for focused reading.` |
 | Overview | [README.md](./README.md) |
@@ -58,22 +60,22 @@ The recovery Dockerfile is intentionally limited to the exact digest-pinned `FRO
 - The temporary verification password is no longer active. Both source secrets were rotated without printing them, the protected account was updated, the final conditional bootstrap was restored, and authentication with the rotated Railway variable succeeded.
 - The lawful-use notice in [README.md](./README.md) tells deployers to follow site terms and copyright law, avoid circumvention, and avoid unauthorized redistribution.
 
-## Draft Attempt, Audit Result, and Safe Gate
+## Published Serialized Config Audit and Reconciliation
 
-The exact command `railway templates create --project 938d1012-731c-42d8-ad28-755b690ad063 --environment c85c83cc-e082-4c30-b93a-68e35433017b --json` created draft `0ef8d34f-b56a-4031-80d0-91a86c55a2cb`, code `LJorwr`, title `Readeck`, status `UNPUBLISHED`, in the approved workspace.
+The exact command `railway templates create --project 938d1012-731c-42d8-ad28-755b690ad063 --environment c85c83cc-e082-4c30-b93a-68e35433017b --json` created draft `0ef8d34f-b56a-4031-80d0-91a86c55a2cb`, code `LJorwr`, title `Readeck`, in the approved workspace. Its first serialization stripped eight defaults; the user restored them in the editor and attested that every adjacent inventory description was entered.
 
-The audited `serializedConfig` contains:
+The reconciled draft and published `serializedConfig` both contain:
 
 - one service named exactly `Readeck`, sourced from `https://github.com/aalfath/readeck-railway-template`;
 - the complete conditional bootstrap, `/login` health path, `ON_FAILURE` policy with 10 retries, one public service-domain marker, and one `/readeck` volume;
-- all nine expected variable keys, all required (`isOptional: false`);
-- the exact canonical URL default `https://${{Readeck.RAILWAY_PUBLIC_DOMAIN}}`;
-- **no default value for the other eight required variables**, including both credentials and all safe port, host, log, and administrator literals;
-- no 300-second health timeout in the serialized deployment settings.
+- all nine expected variable keys with the exact defaults in the raw block below, all required (`isOptional: false`);
+- exactly two generators: `READECK_ADMIN_PASSWORD=${{secret(48, "abcdef0123456789")}}` and `READECK_SECRET_KEY=${{secret(64, "abcdef0123456789")}}`;
+- exact canonical URL reference `https://${{Readeck.RAILWAY_PUBLIC_DOMAIN}}` and six portable safe literals;
+- no active source password or secret key value anywhere in the serialized graph.
 
-The gate therefore failed. No active source credential appears in the draft, but both generated template functions and six required safe literals are absent. `railway templates publish` was not run.
+`healthcheckTimeout` is omitted from serialization, so Railway applies its documented default of 300 seconds. This is the requested five-minute timeout and matches the verified source setting. Railway's API does not expose editor descriptions in `serializedConfig`; description reconciliation is accepted from the user's explicit attestation.
 
-Publication will be performed manually.
+The gate passed. `railway templates publish` returned status `PUBLISHED`, code `readeck-1`, and https://railway.com/deploy/readeck-1 with the exact approved metadata, overview, and official icon.
 
 ## Raw Variable Block — Exact Namespace `Readeck`
 
@@ -91,7 +93,7 @@ READECK_SECRET_KEY=${{secret(64, "abcdef0123456789")}}
 
 ## Variable Inventory
 
-| Key | Description | State | Manual publisher instruction |
+| Key | Description | State | Operational instruction |
 | --- | --- | --- | --- |
 | `PORT` | Port Railway uses for deployment health checks and the public service target. | Required; safe literal | Set exactly `8000`. |
 | `READECK_SERVER_HOST` | Interface on which Readeck accepts Railway proxy traffic. | Required; safe literal | Set exactly `0.0.0.0`. |
@@ -117,20 +119,17 @@ No deployer input is required. Railway can generate both secrets, the canonical 
 - Copy-ready overview: [README.md](./README.md).
 - Service description if requested: `Readeck 0.22.3 read-later server with persistent SQLite and archived web content.`
 
-## Remaining Manual Publication Actions
+## Publication and Future Update Checklist
 
-1. Open https://railway.com/workspace/templates/0ef8d34f-b56a-4031-80d0-91a86c55a2cb and preserve exact service namespace `Readeck` and the GitHub Dockerfile source.
-2. Preserve public port `8000`, restore the `/login` health path's 300-second timeout, retain the `/readeck` volume, startup command, and `ON_FAILURE` policy with 10 retries.
-3. Paste the complete raw block, keep all nine variables required, and enter every inventory description. Confirm only the two secret variables use generators, the canonical URL remains the existing Railway reference, and no source credential is entered.
-4. Set the exact title, category, description, official icon, service description, and [README.md](./README.md) overview.
-5. Reconcile the complete serialized graph key-for-key and prove that no active source password or secret key appears.
-6. Deploy the draft into a disposable project. Verify generated secrets, no avoidable prompts, successful health and UI, protected first login, supplied-HTML bookmark creation, persistence across restart, test-content deletion, and secret rotation.
-7. Only after an explicit safe-gate approval, publish and then confirm the returned marketplace code, metadata, graph, and HTTP `200` deploy URL.
-8. The manual publisher owns editor reconciliation, publication approval, disposable-resource cleanup, and any later source-project teardown.
+1. The user restored all nine exact defaults, kept every variable required, and attested that all nine descriptions were entered.
+2. Automated pre-publication checks verified the exact functions, literals, canonical URL reference, GitHub wrapper graph, default 300-second health timeout, and source-secret exclusion.
+3. The authorized publication command applied exact title `Readeck`, category `Other`, short description, [README.md](./README.md), and official icon.
+4. Post-publication GraphQL, template-list, icon, and marketplace URL checks passed; https://railway.com/deploy/readeck-1 returns HTTP `200`.
+5. Future changes must preserve the raw block, wrapper digest pin, conditional administrator bootstrap, `/login` check, `/readeck` volume, and lawful-use notice, then repeat the source-secret and deployment audits before updating the template.
 
 ## Residual Risks
 
-- The image-registry blocker is resolved by the minimal GitHub Dockerfile wrapper, but the generated draft strips eight required defaults and one health timeout; manual editor reconciliation is the current publication blocker.
+- Future editor or regeneration changes can strip required defaults. Reconcile all nine values and required states before every marketplace update.
 - The template source follows this repository's GitHub branch. Future repository changes can alter consumer builds even though the upstream Readeck base is digest-pinned; review and verify every wrapper commit before publishing or updating the template.
 - Readeck uses SQLite on the mounted volume. Keep one replica, avoid network filesystems, and maintain independent exports or backups.
 - Railway `/login` readiness confirms the HTTP application is serving but is less comprehensive than Readeck's container CLI health check.

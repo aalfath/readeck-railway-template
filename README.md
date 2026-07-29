@@ -1,5 +1,9 @@
 # Deploy and Host Readeck on Railway
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/readeck-1)
+
+**Published on the Railway marketplace:** https://railway.com/deploy/readeck-1
+
 Readeck is an open-source read-later and bookmark manager that saves readable copies of web pages. It organizes articles with labels, favorites, archives, collections, highlights, full-text search, EPUB export, and browser extensions while keeping the reading library on infrastructure controlled by the deployer.
 
 ## About Hosting Readeck
