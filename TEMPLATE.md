@@ -1,5 +1,7 @@
 # Readeck Railway Template — Published Record
 
+> **Note (2026-11-12):** this record describes the original publication on Readeck 0.22.3. Codeberg has since removed that image, and the Dockerfile now pins Readeck 0.23.5. See [CHANGELOG.md](./CHANGELOG.md) for changes after publication.
+
 **Status: PUBLISHED.** After user reconciliation, all nine exact defaults, required states, template functions, and deployment settings passed the pre-publication and post-publication serialized-config audits. The user attested that all nine inventory descriptions were entered in the editor. Every default is a safe literal, Railway reference, or template function, and no active source credential appears in the published template.
 
 ## Approved Identity and Marketplace Metadata
